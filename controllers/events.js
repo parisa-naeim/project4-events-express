@@ -38,7 +38,7 @@ router.get("/:id", async (req, res) => {
 // Creating a new Event
 router.post("/", async (req, res) => {
   try {
-    const event = await Event.create({ ...req.body, organiser: req.user._id });
+    const event = await Event.create({ ...req.body, organiser: req.user._id, attendees: [req.user._id] });
     res.status(201).json(await event.populate("organiser"));
   } catch (error) {
     console.log(error);
