@@ -1,5 +1,6 @@
 const express = require("express");
 const verifyToken = require("../middleware/verify-token.js");
+const upload = require("../middleware/upload-file.js");
 const Event = require("../models/event.js");
 const router = express.Router();
 
@@ -38,7 +39,11 @@ router.get("/:id", async (req, res) => {
 // Creating a new Event
 router.post("/", async (req, res) => {
   try {
-    const event = await Event.create({ ...req.body, organiser: req.user._id, attendees: [req.user._id] });
+    const event = await Event.create({
+      ...req.body,
+      organiser: req.user._id,
+      attendees: [req.user._id],
+    });
     res.status(201).json(await event.populate("organiser"));
   } catch (error) {
     console.log(error);
@@ -121,6 +126,25 @@ router.post("/:eventId/leave", async (req, res) => {
     console.log(error);
     res.status(500).json(error.message);
   }
+});
+
+// file uploads for an event
+router.post("/upload", upload.single("file"), (req, res) => {
+  console.log("received file: " + req.file);
+  if (!req.file) {
+    return res.status(400).send("No file uploaded.");
+  }
+
+  // Access file information
+  const file = req.file;
+  const filePath = file.path; // Path to the uploaded file
+
+  console.log("successful upload ", file);
+  // Send the file path as a response or process it further
+  res.send({
+    message: "File uploaded successfully",
+    url: file.filename,
+  });
 });
 
 module.exports = router;

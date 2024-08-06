@@ -16,6 +16,8 @@ mongoose.connection.on("connected", () => {
 });
 server.use(cors());
 server.use(express.json());
+server.use('/uploads', express.static('uploads'));
+
 
 // Routes go here
 server.use("/test-jwt", testJWTController);
