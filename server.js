@@ -16,7 +16,7 @@ mongoose.connection.on("connected", () => {
 });
 server.use(cors());
 server.use(express.json());
-server.use('/uploads', express.static('uploads'));
+server.use('/uploads', express.static('/var/data'));
 
 
 // Routes go here
